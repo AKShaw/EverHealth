@@ -1,0 +1,276 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="EverHealth.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent" Loaded="LayoutRoot_Loaded">
+
+        <!-- LOCALIZATION NOTE:
+            To localize the displayed strings copy their values to appropriately named
+            keys in the app's neutral language resource file (AppResources.resx) then
+            replace the hard-coded text value between the attributes' quotation marks
+            with the binding clause whose path points to that string name.
+
+            For example:
+
+                Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}"
+
+            This binding points to the template's string resource named "ApplicationTitle".
+
+            Adding supported languages in the Project Properties tab will create a
+            new resx file per language that can carry the translated values of your
+            UI strings. The binding in these examples will cause the value of the
+            attributes to be drawn from the .resx file that matches the
+            CurrentUICulture of the app at run time.
+         -->
+
+        <!--Panorama control-->
+        <phone:Panorama x:Name="EverHealthPanorama" Title="EverHealth" BorderBrush="#FF000055" Foreground="#FF00A2FF" Background="#FF001E29" FontSize="20" TitleTemplate="{StaticResource SmallPanoramaTitle}" >
+
+            <!--Panorama item one-->
+            <phone:PanoramaItem Header="Home" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid>
+                    <StackPanel Orientation="Vertical" Margin="0,-43,0,0" VerticalAlignment="Top"  Background="#FF003D53">
+                        <TextBlock x:Name="navLbl" Text="Navigation:" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Width="210" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="navHome" Content="Home"/>
+                                <Button x:Name="navBMI" Content="BMI" Click="navBMI_Click"/>
+                                <Button x:Name="navBMR" Content="BMR" Click="navBMR_Click"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Width="210" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="navHBE" Content="Harris Benedict" Click="navHBE_Click"/>
+                                <Button x:Name="navBFP" Content="Body Fat %" Click="navBFP_Click"/>
+                                <Button x:Name="navW2H" Content="Waist To Hip" Click="navW2H_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Margin="0,200,0,0" Orientation="Vertical">
+                        <TextBlock Text="How to use this app:" HorizontalAlignment="Left" FontSize="36" Margin="10,0,0,0" TextWrapping="Wrap"/>
+                        <TextBlock Text="1) Navigate to the appropriate screen using the buttons above, or by swiping across the screen." TextWrapping="Wrap"/>
+                        <TextBlock Text="2) Check all the relevent radio buttons. These are used when converting measurments and are what you will input your measurments as!" TextWrapping="Wrap"/>
+                        <TextBlock Text="3) Use the sliders to input all required measurements*. Everytime these are changed, the answer is calculated and displayed!" TextWrapping="Wrap"/>
+                        <TextBlock Text="4) Some screens require you to scroll down to access more controls." TextWrapping="Wrap"/>
+                        <TextBlock Text="* Waist To Hip Ratio and Body Fat Percentage are measured in circumference, not with calipers!" TextWrapping="Wrap" FontSize="16" VerticalAlignment="Bottom" Margin="0,-5,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Panorama item two-->
+            <phone:PanoramaItem  Header="BMI" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid>
+                    <StackPanel x:Name="bmiUnitMeasurment" HorizontalAlignment="Left" Height="245" Margin="10,-25,0,0" VerticalAlignment="Top" Width="405" Orientation="Horizontal">
+                        <StackPanel Margin="0,-1,0,10" Width="202" HorizontalAlignment="Left" Background="#FF003D53">
+                            <TextBlock TextWrapping="Wrap" Text="Weight" HorizontalAlignment="Center"/>
+                            <RadioButton x:Name="bmiRadBtnWeightKg" Content="Kilograms" IsChecked="True" Checked="bmiRadBtnWeightKg_Checked"/>
+                            <RadioButton x:Name="bmiRadBtnWeightStone" Content="Stone" Checked="bmiRadBtnWeightStone_Checked"/>
+                            <RadioButton x:Name="bmiRadBtnWeightPounds" Content="Pounds" Checked="bmiRadBtnWeightPounds_Checked"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,-1,0,10" Width="202" HorizontalAlignment="Center" Background="#FF003D53">
+                            <TextBlock TextWrapping="Wrap" Text="Height" HorizontalAlignment="Center"/>
+                            <RadioButton x:Name="bmiRadBtnHeightMetres" Content="Metres" IsChecked="True" Checked="bmiRadBtnHeightMetres_Checked"/>
+                            <RadioButton x:Name="bmiRadBtnHeightFeet" Content="Feet" Checked="bmiRadBtnHeightFeet_Checked"/>
+                            <RadioButton x:Name="bmiRadBtnHeightInches" Content="Inches" Checked="bmiRadBtnHeightInches_Checked"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="bmiWeightSliderPanel" Width="405" Margin="8,220,7,227">
+                        <TextBlock x:Name="bmiWeightSliderLbl" TextWrapping="Wrap" Text="Weight Slider" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="bmiWeightSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                        <Slider x:Name="bmiWeightSlider" Foreground="#FF007099" Maximum="400" Value="200" SmallChange="0.01" Height="85" ValueChanged="bmiWeightSlider_ValueChanged"/>
+                    </StackPanel>
+                    <StackPanel x:Name="bmiHeightSliderPanel" Width="405" Margin="8,327,7,120">
+                        <TextBlock x:Name="bmiHeightSliderLbl" TextWrapping="Wrap" Text="Height Slider" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="bmiHeightSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                        <Slider x:Name="bmiHeightSlider" Foreground="#FF007099" Maximum="2.5" Value="1.25" SmallChange="0.01" Height="85" ValueChanged="bmiHeightSlider_ValueChanged"/>
+                    </StackPanel>
+                    <StackPanel x:Name="bmiAnswerStackpanel" Width="405" Orientation="Horizontal" Margin="0,434,0,48">
+                        <StackPanel x:Name="answerBmiStackpanel" Width="202" HorizontalAlignment="Left">
+                            <TextBlock x:Name="bmiAnswerLbl" TextWrapping="Wrap" Text="Your BMI is: " HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel x:Name="answerCategoryStackpanel" Width="203" HorizontalAlignment="Right">
+                            <TextBlock x:Name="bmiCategoryLbl" TextWrapping="Wrap" Text="This is: " HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Panorama item three-->
+            <phone:PanoramaItem Header="BMR (Scroll down)" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid>
+                    <ScrollViewer Margin="0,-41,0,0" HorizontalAlignment="Left" Width="420">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel x:Name="bmrUnitMeasurment" HorizontalAlignment="Left" Height="245" VerticalAlignment="Top" Width="420" Orientation="Horizontal">
+                                <StackPanel Margin="0,-2,0,10" Width="205" HorizontalAlignment="Left" Background="#FF003D53">
+                                    <TextBlock TextWrapping="Wrap" Text="Weight" HorizontalAlignment="Center"/>
+                                    <RadioButton x:Name="bmrRadBtnWeightKg" Content="Kilograms" IsChecked="True" Checked="bmrRadBtnWeightKg_Checked"/>
+                                    <RadioButton x:Name="bmrRadBtnWeightStone" Content="Stone" Checked="bmrRadBtnWeightStone_Checked"/>
+                                    <RadioButton x:Name="bmrRadBtnWeightPounds" Content="Pounds" Checked="bmrRadBtnWeightPounds_Checked"/>
+                                </StackPanel>
+                                <StackPanel Margin="10,-1,0,10" Width="205" HorizontalAlignment="Left" Background="#FF003D53">
+                                    <TextBlock TextWrapping="Wrap" Text="Height" HorizontalAlignment="Center"/>
+                                    <RadioButton x:Name="bmrRadBtnHeightMetres" Content="Metres" IsChecked="True" Checked="bmrRadBtnHeightMetres_Checked"/>
+                                    <RadioButton x:Name="bmrRadBtnHeightFeet" Content="Feet" Checked="bmrRadBtnHeightFeet_Checked"/>
+                                    <RadioButton x:Name="bmrRadBtnHeightInches" Content="Inches" Checked="bmrRadBtnHeightInches_Checked"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel x:Name="bmrGendrerPanel" Orientation="Vertical" Background="#FF003D53" Height="87" Margin="0,-1,0,0">
+                                <TextBlock TextWrapping="Wrap" Text="Gender" HorizontalAlignment="Center"/>
+                                <StackPanel x:Name="bmrGenderRadBtns" Orientation="Horizontal" Height="73" HorizontalAlignment="Center">
+                                    <RadioButton x:Name="bmrRadBtnGenderMale" Content="Male"/>
+                                    <RadioButton x:Name="bmrRadBtnGenderFemale" Content="Female"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel x:Name="bmrWeightSliderPanel" Width="420">
+                                <TextBlock x:Name="bmrWeightSliderLbl" TextWrapping="Wrap" Text="Weight Slider" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="bmrWeightSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                                <Slider x:Name="bmrWeightSlider" Foreground="#FF007099" Maximum="400" Value="200" SmallChange="0.01" Height="85" ValueChanged="bmrWeightSlider_ValueChanged"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bmrHeightSliderPanel" Width="420" Margin="0,-34,0,0">
+                                <TextBlock x:Name="bmrHeightSliderLbl" TextWrapping="Wrap" Text="Height Slider" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="bmrHeightSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                                <Slider x:Name="bmrHeightSlider" Foreground="#FF007099" Maximum="2.5" Value="1.25" SmallChange="0.01" Height="85" ValueChanged="bmrHeightSlider_ValueChanged"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bmrAgeSliderPanel" Width="420" Margin="0,-35,0,0">
+                                <TextBlock x:Name="bmrAgeSliderLbl" TextWrapping="Wrap" Text="Age Slider" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="bmrAgeSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                                <Slider x:Name="bmrAgeSlider" Foreground="#FF007099" Maximum="100" Value="50" Height="85" ValueChanged="bmrAgeSlider_ValueChanged"/>
+                            </StackPanel>
+
+                            <StackPanel x:Name="bmrAnswer" Width="420" Margin="0,-17,0,0">
+                                <TextBlock x:Name="bmrAnswerLbl" TextWrapping="Wrap" Text="Your BMR is: " HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Panorama item four-->
+            <phone:PanoramaItem Header="Body Fat %" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid Margin="0,-36,0,0">
+                    <ScrollViewer HorizontalAlignment="Left" Height="590" Margin="0" VerticalAlignment="Top" Width="420">
+                        <StackPanel>
+                            <StackPanel Height="87" Orientation="Vertical">
+                                <TextBlock x:Name="bfpLeanAnswerLbl" TextWrapping="Wrap" Text="Lean body mass: " HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="bfpFatAnswerLbl" TextWrapping="Wrap" Text="Fatty body mass: " HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="bfpPercentageAnswerLbl" TextWrapping="Wrap" Text="Body fat percentage: " HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bfpGendrerPanel" Orientation="Vertical" Background="#FF003D53" Height="87" Margin="0,-1,0,0">
+                                <TextBlock TextWrapping="Wrap" Text="Gender" HorizontalAlignment="Center"/>
+                                <StackPanel x:Name="bfpGenderRadBtns" Orientation="Horizontal" Height="73" HorizontalAlignment="Center">
+                                    <RadioButton x:Name="bfpRadBtnGenderMale" Content="Male" Checked="bfpRadBtnGenderMale_Checked"/>
+                                    <RadioButton x:Name="bfpRadBtnGenderFemale" Content="Female" Checked="bfpRadBtnGenderFemale_Checked"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Margin="0,2,0,0">
+                                <StackPanel Height="99" Orientation="Vertical" Margin="0,10,0,5" Background="#FF003D53">
+                                    <TextBlock TextWrapping="Wrap" Text="Weight" HorizontalAlignment="Center"/>
+                                    <StackPanel Margin="-7,-1,0,10" Width="427" HorizontalAlignment="Left"  Orientation="Horizontal">
+                                        <RadioButton x:Name="bfpRadBtnWeightKg" Content="Kilograms" IsChecked="True" HorizontalAlignment="Center" Margin="55,0,0,0" Checked="bfpRadBtnWeightKg_Checked"/>
+                                        <RadioButton x:Name="bfpRadBtnWeightPounds" Content="Pounds" HorizontalAlignment="Center" Checked="bfpRadBtnWeightPounds_Checked"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel x:Name="bfpWeightSliderPanel" Margin="0,6,0,0" Height="108" Background="#FF003C51">
+                                    <TextBlock x:Name="bfpWeightSliderLbl" TextWrapping="Wrap" Text="Weight Slider" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="bfpWeightSliderValueLbl" TextWrapping="Wrap" Text="Current Value:" HorizontalAlignment="Center"/>
+                                    <Slider x:Name="bfpWeightSlider" Foreground="#FF007099" Maximum="400" Value="200" SmallChange="0.01" Height="85" Margin="0,-15,0,0" ValueChanged="bfpWeightSlider_ValueChanged"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Background="#FF005776">
+                                <TextBlock Text="Waist" VerticalAlignment="Top" Margin="0,14,0,0"/>
+                                <Slider x:Name="bfpWaistSlider" Foreground="#FF007099" Maximum="150" Value="75" SmallChange="0.1" Width="273" VerticalAlignment="Center" Minimum="15" ValueChanged="bfpWaistSlider_ValueChanged"/>
+                                <TextBlock x:Name="bfpWaistAnswer" TextWrapping="Wrap" Text="{Binding Value, ElementName=bfpWaistSlider, StringFormat=\{0:F\}}" VerticalAlignment="Center" Margin="0,-30,0,0"/>
+                                <TextBlock x:Name="bfpWaistUnit" Text="Cm" VerticalAlignment="Center" Margin="6,-30,0,0"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bfpPanelWrist" Orientation="Horizontal" Margin="0,-43,0,0" Background="#FF005776">
+                                <TextBlock Text="Wrist" VerticalAlignment="Top" Margin="0,14,0,0"/>
+                                <Slider x:Name="bfpWristSlider" Foreground="#FF007099" Maximum="20" Value="10" SmallChange="0.1" Width="291" VerticalAlignment="Center" ValueChanged="bfpWristSlider_ValueChanged"/>
+                                <TextBlock x:Name="bfpWirstAnswer" TextWrapping="Wrap" Text="{Binding Value, ElementName=bfpWristSlider, StringFormat=\{0:F\}}" VerticalAlignment="Center" Margin="0,-30,0,0"/>
+                                <TextBlock x:Name="bfpWristUnit" Text="Cm" VerticalAlignment="Center" Margin="6,-30,0,0"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bfpPanelHip"  Orientation="Horizontal" Margin="0,-43,0,0" Background="#FF005776">
+                                <TextBlock Text="Hip" VerticalAlignment="Top" Margin="0,14,0,0"/>
+                                <Slider x:Name="bfpHipSlider" Foreground="#FF007099" Maximum="150" Value="75" SmallChange="0.1" Width="300" VerticalAlignment="Center" ValueChanged="bfpHipSlider_ValueChanged"/>
+                                <TextBlock x:Name="bfpHipAnswer" TextWrapping="Wrap" Text="{Binding Value, ElementName=bfpHipSlider, StringFormat=\{0:F\}}" VerticalAlignment="Center" Margin="0,-30,0,0"/>
+                                <TextBlock x:Name="bfpHipUnit" Text="Cm" VerticalAlignment="Center" Margin="6,-30,0,0"/>
+                            </StackPanel>
+                            <StackPanel x:Name="bfpPanelForearm"  Orientation="Horizontal" Margin="0,-43,0,0" Background="#FF005776">
+                                <TextBlock Text="Forearm" VerticalAlignment="Top" Margin="0,14,0,0"/>
+                                <Slider x:Name="bfpForearmSlider" Foreground="#FF007099" Maximum="50" Value="25" SmallChange="0.1" Width="270" VerticalAlignment="Center" ValueChanged="bfpForearmSlider_ValueChanged"/>
+                                <TextBlock x:Name="bfpForarmAnswer" TextWrapping="Wrap" Text="{Binding Value, ElementName=bfpForearmSlider, StringFormat=\{0:F\}}" VerticalAlignment="Center" Margin="0,-30,0,0"/>
+                                <TextBlock x:Name="bfpForearmUnit" Text="Cm" VerticalAlignment="Center" Margin="6,-30,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Panorama item five-->
+            <phone:PanoramaItem Header="Harris Benedict" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid Margin="0,-46,0,-3">
+                    <StackPanel x:Name="bmrShowPanel" Orientation="Vertical" Width="420" Margin="0,0,0,452" HorizontalAlignment="Center">
+                        <Button x:Name="calcBMRLbl" Content="To load/calculate BMR, Click Here" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Click="calcBMRLbl_Click"/>
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Your BMR is: " HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
+                            <TextBlock x:Name="BMRAnswerLbl" Text="{Binding BMR}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,46,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="hbeExcersiseLevelPanel" Margin="0,102,0,107" Background="#FF003D53">
+                        <TextBlock Text="Please select your excersise level:" HorizontalAlignment="Center"/>
+                        <RadioButton x:Name="hbeExLvlSedentry" Content="Sedentary" HorizontalAlignment="Center" Checked="hbeExLvlSedentry_Checked"/>
+                        <RadioButton x:Name="hbeExLvlLight" Content="Lightly active" HorizontalAlignment="Center" Checked="hbeExLvlLight_Checked"/>
+                        <RadioButton x:Name="hbeExLvlModerate" Content="Moderately active" HorizontalAlignment="Center" Checked="hbeExLvlModerate_Checked"/>
+                        <RadioButton x:Name="hbeExLvlVery" Content="Very active" HorizontalAlignment="Center" Checked="hbeExLvlVery_Checked"/>
+                        <RadioButton x:Name="hbeExLvlExtra" Content="Extra active" HorizontalAlignment="Center" Checked="hbeExLvlExtra_Checked"/>
+                    </StackPanel>
+                    <StackPanel x:Name="hbeAnswerStackpanel" Margin="0,496,0,0">
+                        <TextBlock x:Name="hbeAnswerLbl" Text="You require 0 calories per day." HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Panorama item six-->
+            <phone:PanoramaItem Header="Waist to Hip" HeaderTemplate="{StaticResource SmallItemTitle}">
+                <Grid>
+                    <StackPanel>
+                        <StackPanel x:Name="w2hWaistSliderPanel" Margin="0" Background="#FF003D53" Height="104">
+                            <TextBlock x:Name="w2hWaistSliderLbl" TextWrapping="Wrap" Text="Waist Slider" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="w2hWaistSliderValueLbl" TextWrapping="Wrap" Text="Current waist:" HorizontalAlignment="Center"/>
+                            <Slider x:Name="w2hWaistSlider" Foreground="#FF007099" Maximum="400" Value="200" SmallChange="0.01" Height="85" ValueChanged="w2hWaistSlider_ValueChanged"/>
+                        </StackPanel>
+                        <StackPanel x:Name="w2hHipSliderPanel" Margin="0,10,0,0" Height="104" Background="#FF003D53">
+                            <TextBlock x:Name="w2hHipSliderLbl" TextWrapping="Wrap" Text="Hip Slider" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="w2hHipSliderValueLbl" TextWrapping="Wrap" Text="Current hip: " HorizontalAlignment="Center"/>
+                            <Slider x:Name="w2hHipSlider" Foreground="#FF007099" Maximum="400" Value="200" SmallChange="0.01" Height="85" ValueChanged="w2hHipSlider_ValueChanged"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock x:Name="w2hLbl" Text="Your waist to hip ratio is: " HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </phone:PanoramaItem>
+
+        </phone:Panorama>
+
+        <!--Uncomment to see an alignment grid to help ensure your controls are
+            aligned on common boundaries.  The image has a top margin of -32px to
+            account for the System Tray. Set this to 0 (or remove the margin altogether)
+            if the System Tray is hidden.
+
+            Before shipping remove this XAML and the image itself.-->
+        <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
+
+    </Grid>
+</phone:PhoneApplicationPage>
